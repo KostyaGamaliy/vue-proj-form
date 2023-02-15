@@ -1,11 +1,12 @@
 <?php
 session_start();
-$errors = $_SESSION['errors'] ?? [];
-$data = $_SESSION['data'] ?? [];
+if (isset($_SESSION['errors']) && isset($_SESSION['data'])) {
+    $errors = $_SESSION['errors'];
+    $data = $_SESSION['data'];
+}
 
-//if (isset($_SERVER['HTTP_REFERER'])) {
-//    $errors = [];
-//}
+//$errors = $_SESSION['errors'] ?? [];
+//$data = $_SESSION['data'] ?? [];
 ?>
 
 <!doctype html>
@@ -143,8 +144,8 @@ $data = $_SESSION['data'] ?? [];
                                 type="radio"
                                 name="publish_in_index"
                                 id="publish_in_index_yes"
-                                value="yes"
-                                <?php echo isset($data['publish_in_index']) && $data['publish_in_index'] === "yes" ? "checked" : "" ?>
+                                value="true"
+                                <?php echo isset($data['publish_in_index']) && $data['publish_in_index'] === "true" ? "checked" : "" ?>
                         >
                         <label class="form-check-label" for="publish_in_index_yes">
                             Да
@@ -156,8 +157,8 @@ $data = $_SESSION['data'] ?? [];
                                 type="radio"
                                 name="publish_in_index"
                                 id="publish_in_index_no"
-                                value="no"
-                                <?php echo isset($data['publish_in_index']) && $data['publish_in_index'] === "no" ? "checked" : "" ?>
+                                value="false"
+                                <?php echo isset($data['publish_in_index']) && $data['publish_in_index'] === "false" ? "checked" : "" ?>
                         >
                         <label class="form-check-label" for="publish_in_index_no">
                             Нет
@@ -186,8 +187,8 @@ $data = $_SESSION['data'] ?? [];
                 <div class="col-md-9">
                     <button type="submit" class="btn btn-primary">Отправить</button>
                 </div>
-                <div class="col-md-3">
-                    <div class="alert <?php echo isset($errors) && count($errors) > 0 ? 'alert-danger' : 'alert-success' ?>">
+                <div class="col-md-3 <?php if (!isset($errors)) echo 'd-none' ?>">
+                    <div class="alert <?php echo isset($errors) && count($errors) > 0 ? 'alert-danger' : 'alert-success'?>">
                         <?php echo isset($errors) && count($errors) > 0 ? 'Неверно заполнена форма' : 'Форма валидна' ?>
                     </div>
                 </div>

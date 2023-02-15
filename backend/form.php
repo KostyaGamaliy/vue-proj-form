@@ -1,4 +1,5 @@
 <?php
+session_start();
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = $_POST["title"];
     $annotation = $_POST["annotation"];
@@ -8,6 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $date = $_POST["date"];
     $publish_in_index = $_POST["publish_in_index"] ?? "";
     $category = $_POST["category"] ?? "";
+    $errors = [];
+
+    $date_timestamp = strtotime($date);
+    $today = time();
+    $YearToCurrent = date_create(date("Y", $today) . "-" . date("m", $date_timestamp) . "-" . date("d", $date_timestamp));
+
+    $diff = date_diff(date_create(date("d-m-Y", $today)), $YearToCurrent);
+    $days = $diff->format("%R%a");
 
     if (empty($title)) {
         $errors["title"] = "Заголовок не должен быть пустым";
@@ -35,11 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors["views"] = "Количество просмотров должно быть целым положительным числом";
     }
 
-    if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date) || $date < date("Y-m-d")) {
+    if ($date_timestamp === false || $days < 0) {
         $errors["date"] = "Дата публикации должна быть действительной и не ранее сегодняшнего дня";
     }
 
-    if (empty($publish_in_index) || ($publish_in_index != "yes" && $publish_in_index != "no")) {
+    if (empty($publish_in_index) || (!$publish_in_index && $publish_in_index)) {
         $errors["publish_in_index"] = "Поле публикация на главной является обязательным и должно содержать значение 'yes' или 'no'";
     }
 
