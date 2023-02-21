@@ -4,9 +4,6 @@ if (isset($_SESSION['errors']) && isset($_SESSION['data'])) {
     $errors = $_SESSION['errors'];
     $data = $_SESSION['data'];
 }
-
-//$errors = $_SESSION['errors'] ?? [];
-//$data = $_SESSION['data'] ?? [];
 ?>
 
 <!doctype html>

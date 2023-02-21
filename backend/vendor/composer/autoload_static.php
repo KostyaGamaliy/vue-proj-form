@@ -13,14 +13,14 @@ class ComposerStaticInit51aa9f56a3f4dffdb194fa570bfbe6e4
     );
 
     public static $prefixLengthsPsr4 = array (
+        'V' => 
+        array (
+            'Validations\\' => 12,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Component\\VarDumper\\' => 28,
-        ),
-        'P' => 
-        array (
-            'Palmo\\' => 6,
         ),
         'D' => 
         array (
@@ -29,6 +29,10 @@ class ComposerStaticInit51aa9f56a3f4dffdb194fa570bfbe6e4
     );
 
     public static $prefixDirsPsr4 = array (
+        'Validations\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Validations',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -36,10 +40,6 @@ class ComposerStaticInit51aa9f56a3f4dffdb194fa570bfbe6e4
         'Symfony\\Component\\VarDumper\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
-        ),
-        'Palmo\\' => 
-        array (
-            0 => '/',
         ),
         'Dd\\' => 
         array (

@@ -6,8 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Validations\\' => array($baseDir . '/Validations'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\VarDumper\\' => array($vendorDir . '/symfony/var-dumper'),
-    'Palmo\\' => array('/'),
     'Dd\\' => array($vendorDir . '/wanfeiyy/dd/src/Dd'),
 );

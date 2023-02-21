@@ -1,64 +1,62 @@
 <?php
 session_start();
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $title = $_POST["title"];
-    $annotation = $_POST["annotation"];
-    $content = $_POST["content"];
-    $email = $_POST["email"];
-    $views = $_POST["views"];
-    $date = $_POST["date"];
-    $publish_in_index = $_POST["publish_in_index"] ?? "";
-    $category = $_POST["category"] ?? "";
+	require_once('vendor/autoload.php');
+
+	use Validations\AnnotationValidate;
+	use Validations\CategoryValidate;
+	use Validations\ContentValidate;
+	use Validations\DateValidate;
+	use Validations\EmailValidate;
+	use Validations\PublishInIndexValidate;
+	use Validations\TitleValidate;
+	use Validations\ViewsValidate;
+
+	if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors = [];
 
-    $date_timestamp = strtotime($date);
-    $today = time();
-    $YearToCurrent = date_create(date("Y", $today) . "-" . date("m", $date_timestamp) . "-" . date("d", $date_timestamp));
+		$title_validate = new TitleValidate();
+		if ($title_validate->validate($_POST["title"])) {
+			$errors["title"] = $title_validate->validate($_POST["title"]);
+		}
 
-    $diff = date_diff(date_create(date("d-m-Y", $today)), $YearToCurrent);
-    $days = $diff->format("%R%a");
+		$annotation_validate = new AnnotationValidate();
+		if ($annotation_validate->validate($_POST["annotation"])) {
+			$errors["annotation"] = $annotation_validate->validate($_POST["annotation"]);
+		}
 
-    if (empty($title)) {
-        $errors["title"] = "Заголовок не должен быть пустым";
-    } elseif (strlen($title) < 3) {
-        $errors["title"] = "Заголовок не должен быть меньше 3 символов";
-    } elseif (strlen($title) > 255) {
-        $errors["title"] = "Заголовок не должен быть больше 255 символов";
-    }
+		$content_validate = new ContentValidate();
+		if ($content_validate->validate($_POST["content"])) {
+			$errors["content"] = $content_validate->validate($_POST["content"]);
+		}
 
-    if (strlen($annotation) > 500) {
-        $errors["annotation"] = "Поле аннотация не должно превышать 500 символов";
-    }
+		$email_validate = new EmailValidate();
+		if ($email_validate->validate($_POST["email"])) {
+			$errors["email"] = $email_validate->validate($_POST["email"]);
+		}
 
-    if (strlen($content) > 30000) {
-        $errors["content"] = "Поле контента не должно превышать 30000 символов";
-    }
+		$views_validate = new ViewsValidate();
+		if ($views_validate->validate($_POST["views"])) {
+			$errors["views"] = $views_validate->validate($_POST["views"]);
+		}
 
-    if (empty($email)) {
-        $errors["email"] = "Поле email не должно быть пустым";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors["email"] = "Неверный формат";
-    }
+		$date_validate = new DateValidate();
+		if ($date_validate->validate($_POST["date"])) {
+			$errors["date"] = $date_validate->validate($_POST["date"]);
+		}
 
-    if (!is_numeric($views) || $views < 0 || !filter_var($views, FILTER_VALIDATE_INT)) {
-        $errors["views"] = "Количество просмотров должно быть целым положительным числом";
-    }
+		$publish_in_index_validate = new PublishInIndexValidate();
+		if ($publish_in_index_validate->validate($_POST["publish_in_index"] ?? "")) {
+			$errors["publish_in_index"] = $publish_in_index_validate->validate($_POST["publish_in_index"] ?? "");
+		}
 
-    if ($date_timestamp === false || $days < 0) {
-        $errors["date"] = "Дата публикации должна быть действительной и не ранее сегодняшнего дня";
-    }
+		$category_validate = new CategoryValidate();
+		if ($category_validate->validate($_POST["category"] ?? "")) {
+			$errors["category"] = $category_validate->validate($_POST["category"] ?? "");
+		}
 
-    if (empty($publish_in_index) || (!$publish_in_index && $publish_in_index)) {
-        $errors["publish_in_index"] = "Поле публикация на главной является обязательным и должно содержать значение 'yes' или 'no'";
-    }
+		$_SESSION['errors'] = $errors;
+		$_SESSION['data'] = $_POST;
 
-    if (!is_numeric($category) || !in_array($category, [1, 2, 3])) {
-        $errors["category"] = "Поле категории должно быть числом и иметь одно из значений [1, 2, 3]";
-    }
-
-    $_SESSION['errors'] = $errors;
-    $_SESSION['data'] = $_POST;
-
-    header('Location: http://localhost:85/');
-    die();
-}
+		header('Location: http://localhost:85/');
+		die();
+	}
